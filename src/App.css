@@ -129,6 +129,12 @@ body, .app {
 }
 .book-authors {
   color: #999;
+  list-style: none;
+  padding: 0;
+}
+
+.book-authors li {
+  padding: 0;
 }
 
 .book-top {
