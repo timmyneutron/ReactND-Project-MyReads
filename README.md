@@ -18,6 +18,7 @@ This is a project for Udacity's React Nanodegree. It's a web app that displays b
 ## Getting Started
 To start up the app:
 
+- [Install npm](https://docs.npmjs.com/getting-started/installing-node)
 - Download/clone the repository
 - To install dependencies, navigate to the root directory of the project and execute:
 
