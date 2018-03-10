@@ -33,7 +33,7 @@ class Book extends Component {
   render() {
     let book = this.props.book
     let title = book.title
-    let thumbnail = book.imageLinks.thumbnail
+    let thumbnail = book.imageLinks.thumbnail ? book.imageLinks.thumbnail : "https://dummyimage.com/128x193/000000/ffffff.jpg&text=No+Thumbnail+Found"
     let authors = book.authors ? book.authors : []
 
     return ( 
