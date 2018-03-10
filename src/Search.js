@@ -21,7 +21,7 @@ class Search extends ReactQueryParams {
   *  This allows users to share URLs for searches.
   */
   componentWillMount() {
-    if (window.location.search) {
+    if (window.location.search && window.location.search.substring(1, 3) === "q=") {
       this.setQueryParams({ q: window.location.search.substring(3) })
       BooksAPI.search(escapeStringRegexp(this.queryParams.q))
       .then(results => Array.isArray(results) ?

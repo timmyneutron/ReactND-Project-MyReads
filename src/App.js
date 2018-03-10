@@ -2,8 +2,8 @@ import React from 'react'
 import './App.css'
 import { Route, Link } from 'react-router-dom'
 import Search from './Search'
-import * as BooksAPI from './BooksAPI'
 import BookShelf from './BookShelf'
+import * as BooksAPI from './BooksAPI'
 
 class BooksApp extends React.Component {
   // Store the list of tagged books in the top-level state of the app.
