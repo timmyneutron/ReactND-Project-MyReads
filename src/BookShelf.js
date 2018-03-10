@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Book from './Book'
 
+// Display all the books that fit the "shelf" property.
 class BookShelf extends Component {
   render() {
     return (
