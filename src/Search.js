@@ -45,7 +45,13 @@ class Search extends ReactQueryParams {
     event.preventDefault()
     this.setQueryParams({ q: escapeStringRegexp(this.state.query)})
     BooksAPI.search(escapeStringRegexp(this.state.query))
-    .then(results => Array.isArray(results) ? this.setState({ results: results }) : this.setState({ results: [] }))
+    .then(results => {
+      if (Array.isArray(results)) {
+        this.setState({ results: results })
+      } else {
+        this.setState({ results: [] })
+      }
+    })
   }
 
   /**
