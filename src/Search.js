@@ -1,13 +1,22 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
-import serializeForm from 'form-serialize'
 import Book from './Book'
+import ReactQueryParams from 'react-query-params'
+import escapeStringRegexp from 'escape-string-regexp'
 
-class Search extends Component {
+class Search extends ReactQueryParams {
   state = {
     query: "",
-    books: []
+    results: []
+  }
+
+  componentWillMount() {
+    if (window.location.search) {
+      this.setQueryParams({ q: window.location.search.substring(3) })
+      BooksAPI.search(escapeStringRegexp(this.queryParams.q))
+      .then(results => Array.isArray(results) ? this.setState({ results: results }) : this.setState({ results: [] }))
+    }
   }
 
   handleChange = (event) => {
@@ -16,9 +25,18 @@ class Search extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    const values = serializeForm(event.target, { hash: true })
-    BooksAPI.search(values.searchTerm)
-    .then(books => this.setState({ books }))
+    this.setQueryParams({ q: escapeStringRegexp(this.state.query)})
+    BooksAPI.search(escapeStringRegexp(this.state.query))
+    .then(results => Array.isArray(results) ? this.setState({ results: results }) : this.setState({ results: [] }))
+  }
+
+  getShelf = (result) => {
+    let found = this.props.books.filter(book => book.id === result.id)
+    if (found.length === 1) {
+      return found[0].shelf
+    } else {
+      return "none"
+    }
   }
 
   render() {
@@ -30,7 +48,6 @@ class Search extends Component {
             <form onSubmit={ this.handleSubmit }>
               <input
                 type="text"
-                name="searchTerm"
                 placeholder="Search by title or author"
                 value={ this.state.query }
                 onChange={ this.handleChange }
@@ -40,9 +57,13 @@ class Search extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            { this.state.books.map(book => (
-              <li key={ book.id }>
-                <Book book={ book }/>
+            { this.state.results.map(result => (
+              <li key={ result.id }>
+                <Book
+                  book={ result }
+                  shelf={ this.getShelf(result) }
+                  onShelfChange={ () => { this.props.onShelfChange() }}
+                />
               </li>
             ))}
           </ol>

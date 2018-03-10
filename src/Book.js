@@ -6,9 +6,9 @@ class Book extends Component {
     shelf: "none"
   }
 
-  componentWillRender() {
-    if (this.props.book.shelf) {
-      this.setState({ shelf: this.props.book.shelf })
+  componentWillMount() {
+    if (this.props.shelf) {
+      this.setState({ shelf: this.props.shelf })
     }
   }
 
@@ -16,6 +16,7 @@ class Book extends Component {
     let newShelf = event.target.value
     this.setState({ shelf: newShelf })
     BooksAPI.update(this.props.book, newShelf)
+    .then(this.props.onShelfChange ? this.props.onShelfChange() : {})
   }
 
   render() {
@@ -30,7 +31,7 @@ class Book extends Component {
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${ thumbnail })` }}></div>
           <div className="book-shelf-changer">
             <select value={ this.state.shelf } onChange={ (event) => { this.handleChange(event) }}>
-              <option value="none" disabled>Move to...</option>
+              <option value="moveTo" disabled>Move to...</option>
               <option value="currentlyReading">Currently Reading</option>
               <option value="wantToRead">Want to Read</option>
               <option value="read">Read</option>
