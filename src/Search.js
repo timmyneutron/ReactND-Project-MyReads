@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 import escapeStringRegexp from 'escape-string-regexp'
+import queryString from 'query-string'
+import serializeForm from 'form-serialize'
 
 class Search extends Component {
   /**
@@ -15,6 +17,17 @@ class Search extends Component {
   }
 
   /**
+  * Check URL for query parameters, and if "q" query parameter exists,
+  * search for its value. This allows search URLs to be shared.
+  */
+  componentWillMount() {
+    const parsed = queryString.parse(location.search)
+    if ("q" in parsed) {
+      this.setState({ query: parsed.q }, this.getResults )
+    }
+  }
+
+  /**
   * Change the value of the query state variable when the text in the search
   * form changes.
   */
@@ -23,8 +36,21 @@ class Search extends Component {
   }
 
   /**
+  * Callback function for submitting search form (pressing return).
+  * Updates URL with query parameters so search URL can be shared.
+  */
+  handleSubmit = (event) => {
+    event.preventDefault()
+    if (this.state.query !== "") {
+      location.search = "?" + queryString.stringify({ q: this.state.query })
+    } else {
+      location.href = location.origin + location.pathname
+    }
+  }
+
+  /**
   * Callback function that searches the BooksAPI for the query and then
-  * sets the results
+  * sets the results in the component state.
   */
   getResults = () => {
     if (this.state.query !== "") {
@@ -46,7 +72,7 @@ class Search extends Component {
   * and return the shelf (or "none" if the shelf isn't found).
   */
   getShelf = (result) => {
-    let found = this.props.books.filter(book => book.id === result.id)
+    const found = this.props.books.filter(book => book.id === result.id)
     if (found.length === 1) {
       return found[0].shelf
     } else {
@@ -61,12 +87,15 @@ class Search extends Component {
         <div className="search-books-bar">
           <Link className="close-search" to="/">Close</Link>
           <div className="search-books-input-wrapper">
-            <input
-              type="text"
-              placeholder="Search by title or author"
-              value={ this.state.query }
-              onChange={ this.handleChange }
-            />
+          <form onSubmit={ this.handleSubmit }>
+              <input
+                type="text"
+                placeholder="Search by title or author"
+                value={ this.state.query }
+                onChange={ this.handleChange }
+                name="q"
+              />
+            </form>
           </div>
         </div>
         <div className="search-books-results">
