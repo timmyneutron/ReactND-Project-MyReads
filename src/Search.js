@@ -4,7 +4,6 @@ import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 import escapeStringRegexp from 'escape-string-regexp'
 import queryString from 'query-string'
-import serializeForm from 'form-serialize'
 
 class Search extends Component {
   /**
