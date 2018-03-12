@@ -8,7 +8,21 @@ import * as BooksAPI from './BooksAPI'
 class BooksApp extends React.Component {
   // Store the list of tagged books in the top-level state of the app.
   state = {
-    books: []
+    books: [],
+    bookShelves: [
+      {
+        shelf: "currentlyReading",
+        title: "Currently Reading"
+      },
+      {
+        shelf: "wantToRead",
+        title: "Want To Read"
+      },
+      {
+        shelf: "read",
+        title: "Read"
+      }
+    ]
   }
 
   // Get all tagged books when the app loads, and store them in the state.
@@ -36,26 +50,18 @@ class BooksApp extends React.Component {
           <div className="list-books-title">
             <h1>MyReads</h1>
           </div>
-          <div className="list-books-content">
-            <BookShelf
-              shelf="currentlyReading"
-              title="Currently Reading"
-              books={ this.state.books }
-              onShelfChange={ () => { this.changeShelf() } }
-            />
-            <BookShelf
-              shelf="wantToRead"
-              title="Want To Read"
-              books={ this.state.books }
-              onShelfChange={ () => { this.changeShelf() } }
-            />
-            <BookShelf
-              shelf="read"
-              title="Read"
-              books={ this.state.books }
-              onShelfChange={ () => { this.changeShelf() } }
-            />
-          </div>
+          <ol className="list-books-content">
+              { this.state.bookShelves.map(shelf => (
+                <li key={ shelf.shelf }>
+                  <BookShelf
+                    shelf={ shelf.shelf }
+                    title={ shelf.title }
+                    books={ this.state.books }
+                    onShelfChange={ () => { this.changeShelf() } }
+                  />
+                </li>
+              ))}
+          </ol>
           <Link className="open-search" to="/search">Add a book</Link>
         </div>
       )}/>

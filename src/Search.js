@@ -4,8 +4,16 @@ import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 import escapeStringRegexp from 'escape-string-regexp'
 import queryString from 'query-string'
+import PropTypes from 'prop-types'
 
+// Search page component
 class Search extends Component {
+  // set PropTypes
+  static PropTypes = {
+    books: PropTypes.array,
+    onShelfChange: PropTypes.func
+  }
+
   /**
   * Store the search query and results in the component state.
   * Tagged books are passed to the component as props.
@@ -41,9 +49,9 @@ class Search extends Component {
   handleSubmit = (event) => {
     event.preventDefault()
     if (this.state.query !== "") {
-      location.search = "?" + queryString.stringify({ q: this.state.query })
+      this.setQueryParam(this.state.query)
     } else {
-      location.href = location.origin + location.pathname
+      this.resetURL()
     }
   }
 
@@ -55,7 +63,8 @@ class Search extends Component {
     if (this.state.query !== "") {
       BooksAPI.search(this.state.query)
       .then(results => {
-        if (this.state.query !== "") {
+        // check the query state variable again, in case it's changed since the last API call
+        if (this.state.query !== "" && Array.isArray(results)) {
           this.setState({ results: results })
         } else {
           this.setState({ results: [] })
@@ -63,7 +72,18 @@ class Search extends Component {
       })
     } else {
       this.setState({ results: [] })
+      this.resetURL()
     }
+  }
+
+  // set "q" query param in URL
+  setQueryParam = (value) => {
+    location.search = "?" + queryString.stringify({ q: value })
+  }
+
+  // remove query parameters from URL
+  resetURL = () => {
+    location.href = location.origin + location.pathname
   }
 
   /**

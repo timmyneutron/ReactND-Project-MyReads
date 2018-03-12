@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
 import Book from './Book'
+import PropTypes from 'prop-types'
 
-// Display all the books that fit the "shelf" property.
+// Bookshelf component that displays all books for a given shelf
 class BookShelf extends Component {
+  // set PropTypes
+  static PropTypes = {
+    shelf: PropTypes.string,
+    title: PropTypes.string,
+    books: PropTypes.array,
+    onShelfChange: PropTypes.func
+  }
+  
   render() {
     return (
       <div className="bookshelf">

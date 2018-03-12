@@ -1,8 +1,16 @@
 import React, { Component } from 'react'
 import * as BooksAPI from './BooksAPI'
+import PropTypes from 'prop-types'
 
 // Class for individual books
 class Book extends Component {
+  // set PropTypes
+  static PropTypes = {
+    book: PropTypes.object,
+    shelf: PropTypes.string,
+    onShelfChange: PropTypes.func
+  }
+
   /**
   * Set default values for state variables that are displayed.
   * This way, if no values are passed for the book's title,
