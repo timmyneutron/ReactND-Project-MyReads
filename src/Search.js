@@ -72,7 +72,6 @@ class Search extends Component {
       })
     } else {
       this.setState({ results: [] })
-      this.resetURL()
     }
   }
 
